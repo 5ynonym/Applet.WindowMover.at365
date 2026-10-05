@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Applet.WindowMover/Applet.WindowMover.csproj" />
+  <Project Path="Applet.WindowMover.RegressionTests/Applet.WindowMover.RegressionTests.csproj" />
+</Solution>

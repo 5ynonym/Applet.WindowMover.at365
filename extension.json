@@ -1,0 +1,11 @@
+{
+  "apiVersion": 1,
+  "id": "at365.window-mover",
+  "name": "Applet.WindowMover.at365",
+  "version": "0.2.0",
+  "runtime": "dotnet",
+  "entry": "Applet.WindowMover.at365.dll",
+  "type": "Applets.WindowMover.WindowMoverApplet",
+  "description": "最前面のウィンドウの移動・高さ調整・最小化・最大化・復元・終了をコマンドから実行します。",
+  "capabilities": ["ui"]
+}
