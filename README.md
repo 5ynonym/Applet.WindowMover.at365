@@ -65,3 +65,7 @@ dotnet run --project .\Applet.WindowMover.RegressionTests -c Release -- --protoc
 テスト専用ウィンドウの実移動も確認する場合は `--protocol-smoke` を `--native-smoke` に置き換えます。テスト画面に一時的にフォーカスを移すため、操作していない状態で実行してください。テストが作ったウィンドウだけを移動し、終了時に元のフォーカスへ戻します。
 
 実測結果と未検証の範囲は [VERIFICATION.md](VERIFICATION.md) に記載しています。
+
+## v0.2.1 のバージョン確認
+
+AppDock v0.5.0では共通の「開始までの秒数」で遅延起動でき、手動の「更新を確認」でGitHubの正式リリースを確認できます。manifestに必要なAppDockの最小バージョンと更新確認先を記録しています。
