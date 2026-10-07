@@ -1,6 +1,14 @@
 # Applet.WindowMover.at365
 
-[Watch.at365](../Watch.at365/README.md) のウィンドウ操作を、[AppDock.at365](../AppDock.at365/README.md) の拡張コマンドとして利用する Windows 用 Applet です。AppDock API v1 / .NET 10 の DLL Applet として動作し、ホストの変更は不要です。
+[Watch.at365](../Watch.at365/README.md) のウィンドウ操作を、[AppDock.at365](../AppDock.at365/README.md) の拡張コマンドとして利用する Windows 用 Applet です。**Windows x64 / AppDock 0.3.1以降**が必要です。
+
+## 導入・更新
+
+1. AppDockをトレイの「終了」から完全終了します。
+2. 配布物の `extension.json`、`Applet.WindowMover.at365.dll`、`Applet.WindowMover.at365.deps.json` を、AppDock.at365.exeの隣の `extensions/Applet.WindowMover.at365/` に配置します。更新時も配布物一式をそろえて置き換えてください。
+3. AppDockを起動し、「Applet」一覧で有効にします。操作やキーの割り当てはAppDockから行います。
+
+利用するPCにはAppDockの動作環境が必要です。詳細は[AppDockの導入案内](../AppDock.at365/README.md)を参照してください。
 
 ## コマンド
 
@@ -19,53 +27,20 @@
 
 設定例は左に `F23`、右に `F24`、高さ調整に `Ctrl+Alt+F10` です。AppDock v0.3.1 は Windows キーを含むショートカットに未対応なので、Watch の `Alt+Win+F10/F11/F12` をそのまま使うことはできません。既存 Watch が同じホットキーを登録していると競合するため、片方だけで登録するか別のキーを使ってください。既定のキー割り当ては追加しません。
 
-Watch の作業領域基準、上下端付近の吸着（上60px／下70px）、DWM の不可視枠補正、作業領域を超えるサイズの縮小を引き継いでいます。隣のモニターは元の Watch と同様に現在の作業領域の幅だけ中心点をずらして選び、作業領域の上端または下端が一致する場合に移動します。端のモニターでは折り返しません。任意の上下配置に対するモニター巡回ではありません。
+Watch の作業領域基準、上下端付近の吸着（上60px／下70px）、見えているウィンドウ枠を基準にした位置調整、作業領域を超えるサイズの縮小を引き継いでいます。隣のモニターは元の Watch と同様に現在の作業領域の幅だけ中心点をずらして選び、作業領域の上端または下端が一致する場合に移動します。端のモニターでは折り返しません。任意の上下配置に対するモニター巡回ではありません。
 
 マウスカーソルを変更しません。移動・高さ調整ではフォーカス・Z順も変更しません。閉じる・最小化などの結果として、Windows が別のウィンドウを最前面にすることはあります。デスクトップ、タスクバー、タイトルなし、非表示、最小化中のウィンドウは除外します。最大化・全画面・固定サイズのアプリは、対象アプリ側の制約により移動やサイズ変更が適用されない場合があります。通常権限の AppDock から管理者権限のアプリを操作する場合も、Windows の制限を受けます。
 
 中央移動は最大化中には何もせず、先に「元のサイズに戻す」を実行します。作業領域より大きいウィンドウも中央移動では縮小しません。「元のサイズに戻す」は Windows の通常の復元操作で、左右移動・高さ調整の取り消しや、直前に最小化した別ウィンドウの呼び戻しではありません。
 
-閉じる・最小化・最大化・復元は `WM_SYSCOMMAND` を非同期で送信します。コマンドの完了は要求の送信完了を表し、対象アプリの操作完了や終了を強制しません。閉じる操作は Alt+F4 のキー送信やプロセス強制終了を行わず、対象ウィンドウへ直接通常の終了要求を送ります。
+閉じる・最小化・最大化・復元は対象アプリへ通常の操作を要求します。コマンドが完了しても対象アプリの操作完了を保証するものではなく、閉じる際の保存確認やキャンセルは対象アプリに従います。
 
-時計・マウスジェスチャー・独自ホットキー登録・Win+左右によるスナップ送信は含みません。ホットキーの登録と解除は AppDock が担当します。常駐タイマーやフック、独自の保存設定はありません。
+時計・マウスジェスチャー・Win+左右によるスナップ送信は含みません。ショートカットはAppDockで設定します。Applet固有の設定項目はありません。
 
-## ビルドと配置
+## 遅延開始・更新の確認
 
-.NET 10 SDK と、隣接する `../AppDock.at365/dotnet/AppDock.SDK` が必要です。
+AppDock 0.5.0以降では「開始までの秒数」で遅延起動でき、「更新を確認」でGitHubの正式リリースを手動で確認できます。
 
-```powershell
-dotnet build .\Applet.WindowMover.at365.slnx -c Release
-.\publish.bat
-```
+---
 
-発行先は [publish/Applet.WindowMover.at365](publish/Applet.WindowMover.at365/) です。別の出力先は `publish.bat -OutputDirectory "A:\任意のフォルダー"` で指定できます。
-
-配置先の AppDock を終了してから、AppDock の EXE があるフォルダーを指定します。
-
-```powershell
-.\deploy.bat "A:\Apps\AppDock.at365"
-```
-
-引数がない場合は、無視対象の `deploy.local.txt` の1行目を使います。[deploy.local.txt.example](deploy.local.txt.example) を参考に設定してください。両方未指定なら配置せず終了します。`deploy.bat` は既定の発行先を使います。
-
-`extensions/Applet.WindowMover.at365` に DLL、deps.json、[extension.json](extension.json) を配置します。AppDock.SDK はホストが供給するため配布先へコピーしません。AppDock の設定や既存 Applet は変更しません。AppDock を起動し直し、Applet 一覧から有効にすると、8つのコマンドがパレットとショートカット設定に表示されます。
-
-## 検証
-
-```powershell
-dotnet run --project .\Applet.WindowMover.RegressionTests -c Release
-```
-
-実際のランナーと発行済み DLL の接続を検証する場合:
-
-```powershell
-dotnet run --project .\Applet.WindowMover.RegressionTests -c Release -- --protocol-smoke "..\AppDock.at365\artifacts\dotnet-host\AppDock.ExtensionHost.exe" ".\publish\Applet.WindowMover.at365\Applet.WindowMover.at365.dll"
-```
-
-テスト専用ウィンドウの実移動も確認する場合は `--protocol-smoke` を `--native-smoke` に置き換えます。テスト画面に一時的にフォーカスを移すため、操作していない状態で実行してください。テストが作ったウィンドウだけを移動し、終了時に元のフォーカスへ戻します。
-
-実測結果と未検証の範囲は [VERIFICATION.md](VERIFICATION.md) に記載しています。
-
-## v0.2.1 のバージョン確認
-
-AppDock v0.5.0では共通の「開始までの秒数」で遅延起動でき、手動の「更新を確認」でGitHubの正式リリースを確認できます。manifestに必要なAppDockの最小バージョンと更新確認先を記録しています。
+開発・ビルドについては[開発ガイド](DEVELOPMENT.md)を参照してください。
