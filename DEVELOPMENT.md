@@ -32,7 +32,7 @@ dotnet run --project .\Applet.WindowMover.RegressionTests -c Release
 実際のランナーと発行済み DLL の接続を検証する場合:
 
 ```powershell
-dotnet run --project .\Applet.WindowMover.RegressionTests -c Release -- --protocol-smoke "..\AppDock.at365\artifacts\dotnet-host\AppDock.ExtensionHost.exe" ".\publish\Applet.WindowMover.at365\Applet.WindowMover.at365.dll"
+dotnet run --project .\Applet.WindowMover.RegressionTests -c Release -- --protocol-smoke "..\AppDock.at365\.artifacts\dotnet-host\AppDock.ExtensionHost.exe" ".\publish\Applet.WindowMover.at365\Applet.WindowMover.at365.dll"
 ```
 
 テスト専用ウィンドウの実移動も確認する場合は `--protocol-smoke` を `--native-smoke` に置き換えます。テスト画面に一時的にフォーカスを移すため、操作していない状態で実行してください。テストが作ったウィンドウだけを移動し、終了時に元のフォーカスへ戻します。
@@ -56,3 +56,7 @@ READMEには動作環境・導入・操作・設定・利用上の制約を記�
 ZIP直下に`extension.json`と実行ファイル一式を置き、JSONにID・版・必要な本体版・ZIPのサイズとSHA256を記録します。`OutputDirectory`を指定できる発行スクリプトでも、指定先の配布内容を読み、更新用JSON/ZIPの出力先はこのリポジトリの`publish`です。通常配置用サブフォルダーへJSON/ZIPを混ぜず、`deploy.bat`の配置対象も増やしません。
 
 Web配布やGitHub Releaseには同じ発行で生成したJSONとZIPを一緒に置き、JSONを最後に公開してください。ソースコードの自動生成ZIPは使用しません。発行スクリプトから外部公開は行いません。[共通更新仕様](../AppDock.at365/docs/updates.md)と[配布先の確認手順](../AppDock.at365/docs/update-checklist.md)を参照してください。
+
+## 開発生成物の保存先
+
+開発・テストの生成物は`.artifacts`へ保存します。2026-10-10に旧`artifacts`を中身を保持して改名しました。過去の検証記録内の当repoの`artifacts/`は`.artifacts/`へ読み替えてください。保存済みログ/JSONの内部パスは実行当時の値として保持しています。作業完了時の整理は[AppDockの共通手順](../AppDock.at365/DEVELOPMENT.md#作業完了時のテストフォルダー整理)に従い、実行中・状態不明・未解決の失敗記録・再利用する資料を保持します。
